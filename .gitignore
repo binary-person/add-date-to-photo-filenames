@@ -1,0 +1,4 @@
+node_modules
+samplefolder
+*.log*
+.DS_Store
