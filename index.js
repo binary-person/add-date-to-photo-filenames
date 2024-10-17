@@ -4,7 +4,7 @@ const spawn = require('child_process').spawn;
 const PromisePool = require('es6-promise-pool');
 
 if ((process.argv[2] !== 'dryrun' && process.argv[2] !== 'notdryrun') || !process.argv[3]) {
-  console.log('Usage: node index.js [dryrun/notdryrun] /path/to/folder (debugfile.png)');
+  console.log('Usage: add-date-photo-names [dryrun/notdryrun] /path/to/folder (debugfile.png)');
   process.exit(1);
 }
 
@@ -109,18 +109,17 @@ async function eachInteration(folder, file) {
 
   // check if file already has date on it
   if (/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}_/.test(file)) {
-    // if this is UTC, then overwrite the date, to undo damage done by previous typo
-    if (file.includes('_UTC_')) {
-      file = file.split('_UTC_')[1];
+    // check if it matches ours
+    if (!file.includes(dateStr)) {
+      console.log(`
+dateStr mismatch with already dated file.
+our dateStr: ${dateStr}
+file:        ${file}
+full path:   ${path.join(folder, file)}\n`);
     } else {
-      // check if it matches ours
-      if (!file.includes(dateStr)) {
-        console.log(`dateStr mismatch with already dated file.\nour dateStr: ${dateStr}\nfile: ${file}\nfull path: ${path.join(folder, file)}\n`);
-      } else {
-        console.log('skipping as already done: ' + file);
-      }
-      return;
+      console.log('skipping as already done: ' + file);
     }
+    return;
   }
 
   const newFileName = `${dateStr}_${file}`;

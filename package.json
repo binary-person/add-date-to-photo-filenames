@@ -1,4 +1,5 @@
 {
+  "name": "add-date-photo-names",
   "dependencies": {
     "es6-promise-pool": "^2.5.0"
   }
